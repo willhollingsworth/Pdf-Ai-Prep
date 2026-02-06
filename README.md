@@ -1,6 +1,7 @@
 # Pdf-Ai-Prep
 A Python tool for merging multiple PDF files into a single file while retaining the ability to reference their original filename using a custom footer and bookmarks. 
 
+![Screenshot](images/screenshot.png)
 
 ## Usage
 
