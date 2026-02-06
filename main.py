@@ -2,6 +2,7 @@
 
 
 import io
+import os
 from pathlib import Path
 
 from pypdf import PdfReader, PdfWriter
@@ -57,13 +58,41 @@ def merge_pdfs_with_bookmarks(pdf_files, output_path):
         writer.write(f)
 
 
+def process_pdfs(input_files, final_output):
+    """Process a series of PDFs."""
+    stamped_files = []
+
+    print("Adding footers")
+    for pdf_file in input_files:
+        stamped_path = f"stamped_{Path(pdf_file).name}"
+        add_footer_to_pdf(pdf_file, stamped_path)
+        stamped_files.append(stamped_path)
+        print(f"Stamped {pdf_file}")
+
+    print(f"Merging {len(stamped_files)} PDFs")
+    merge_pdfs_with_bookmarks(stamped_files, final_output)
+    print(f"Created: {final_output}")
+
+    print("cleaning up temp files")
+    for stamped_file in stamped_files:
+        os.remove(stamped_file)
+
+    print("Complete!")
+
+
 if __name__ == "__main__":
+
     # example footer
     # input_pdf = "example.pdf"
     # output_pdf = "output.pdf"
     # add_footer_to_pdf(input_pdf, output_pdf)
 
     # example merge
+    # pdf_list = ["example 1.pdf", "example 2.pdf"]
+    # output_pdf = "combined_output.pdf"
+    # merge_pdfs_with_bookmarks(pdf_list, output_pdf)
+
+    # example process
     pdf_list = ["example 1.pdf", "example 2.pdf"]
     output_pdf = "combined_output.pdf"
-    merge_pdfs_with_bookmarks(pdf_list, output_pdf)
+    process_pdfs(pdf_list, output_pdf)
