@@ -17,7 +17,7 @@ def add_footer_to_pdf(input_path: str, output_path: str) -> None:
     writer = PdfWriter()
     page_count = len(reader.pages)
 
-    print(f"Processing '{filename}' with {page_count} pages...")
+    print(f"Adding footer to '{filename}' with {page_count} pages")
     for page_num, page in enumerate(reader.pages, start=1):
 
         # Create footer overlay
@@ -38,9 +38,9 @@ def add_footer_to_pdf(input_path: str, output_path: str) -> None:
 
 
 def merge_pdfs_with_bookmarks(pdf_files, output_path):
-    """Merge PDFs and add filename bookmarks"""
+    """Merge PDFs and add filename bookmarks."""
     writer = PdfWriter()
-
+    print(f"Merging {pdf_files} to single PDF : {output_path}")
     for pdf_file in pdf_files:
         reader = PdfReader(pdf_file)
         start_page = len(writer.pages)
@@ -59,7 +59,7 @@ def merge_pdfs_with_bookmarks(pdf_files, output_path):
 
 
 def process_pdfs(input_files, final_output):
-    """Process a series of PDFs."""
+    """Process a series of PDFs by adding footers then merging them."""
     stamped_files = []
 
     print("Adding footers")
@@ -73,26 +73,11 @@ def process_pdfs(input_files, final_output):
     merge_pdfs_with_bookmarks(stamped_files, final_output)
     print(f"Created: {final_output}")
 
-    print("cleaning up temp files")
+    print("Cleaning up temp stamp files")
     for stamped_file in stamped_files:
         os.remove(stamped_file)
-
     print("Complete!")
 
 
 if __name__ == "__main__":
-
-    # example footer
-    # input_pdf = "example.pdf"
-    # output_pdf = "output.pdf"
-    # add_footer_to_pdf(input_pdf, output_pdf)
-
-    # example merge
-    # pdf_list = ["example 1.pdf", "example 2.pdf"]
-    # output_pdf = "combined_output.pdf"
-    # merge_pdfs_with_bookmarks(pdf_list, output_pdf)
-
-    # example process
-    pdf_list = ["example 1.pdf", "example 2.pdf"]
-    output_pdf = "combined_output.pdf"
-    process_pdfs(pdf_list, output_pdf)
+    pass
