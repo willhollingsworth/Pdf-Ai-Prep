@@ -36,7 +36,34 @@ def add_footer_to_pdf(input_path: str, output_path: str) -> None:
         writer.write(f)
 
 
+def merge_pdfs_with_bookmarks(pdf_files, output_path):
+    """Merge PDFs and add filename bookmarks"""
+    writer = PdfWriter()
+
+    for pdf_file in pdf_files:
+        reader = PdfReader(pdf_file)
+        start_page = len(writer.pages)
+
+        # Add pages
+        for page in reader.pages:
+            writer.add_page(page)
+
+        # Add bookmark for this file
+        filename = Path(pdf_file).stem
+        bookmark_text = f"{filename} (pages {start_page + 1}-{start_page + len(reader.pages)})"
+        writer.add_outline_item(bookmark_text, start_page)
+
+    with open(output_path, "wb") as f:
+        writer.write(f)
+
+
 if __name__ == "__main__":
-    input_pdf = "example.pdf"
-    output_pdf = "output.pdf"
-    add_footer_to_pdf(input_pdf, output_pdf)
+    # example footer
+    # input_pdf = "example.pdf"
+    # output_pdf = "output.pdf"
+    # add_footer_to_pdf(input_pdf, output_pdf)
+
+    # example merge
+    pdf_list = ["example 1.pdf", "example 2.pdf"]
+    output_pdf = "combined_output.pdf"
+    merge_pdfs_with_bookmarks(pdf_list, output_pdf)
