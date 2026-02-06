@@ -1,8 +1,10 @@
 """Main Logic for PDF AI Prep."""
 
 
+import argparse
 import io
 import os
+import sys
 from pathlib import Path
 
 from pypdf import PdfReader, PdfWriter
@@ -50,7 +52,7 @@ def merge_pdfs_with_bookmarks(pdf_files, output_path):
             writer.add_page(page)
 
         # Add bookmark for this file
-        filename = Path(pdf_file).stem
+        filename = Path(pdf_file).stem.replace("stamped_", "")
         bookmark_text = f"{filename} (pages {start_page + 1}-{start_page + len(reader.pages)})"
         writer.add_outline_item(bookmark_text, start_page)
 
@@ -58,7 +60,7 @@ def merge_pdfs_with_bookmarks(pdf_files, output_path):
         writer.write(f)
 
 
-def process_pdfs(input_files, final_output):
+def process_pdfs(input_files, output_path):
     """Process a series of PDFs by adding footers then merging them."""
     stamped_files = []
 
@@ -70,8 +72,8 @@ def process_pdfs(input_files, final_output):
         print(f"Stamped {pdf_file}")
 
     print(f"Merging {len(stamped_files)} PDFs")
-    merge_pdfs_with_bookmarks(stamped_files, final_output)
-    print(f"Created: {final_output}")
+    merge_pdfs_with_bookmarks(stamped_files, output_path)
+    print(f"Created: {output_path}")
 
     print("Cleaning up temp stamp files")
     for stamped_file in stamped_files:
@@ -79,5 +81,33 @@ def process_pdfs(input_files, final_output):
     print("Complete!")
 
 
+def process_folder(folder_path, output_path):
+    """Process all PDFs in a folder."""
+    pdf_files = [str(p) for p in Path(folder_path).glob("*.pdf")]
+    print(f"Processing folder: {folder_path} with pdf count {len(pdf_files)} files")
+    process_pdfs(pdf_files, output_path)
+
+
 if __name__ == "__main__":
-    pass
+    parser = argparse.ArgumentParser(
+    description='Process and merge PDFs from a folder with footers and bookmarks',
+    )
+    parser.add_argument(
+        'folder',
+        help='Path to folder containing PDF files',
+    )
+
+    args = parser.parse_args()
+    if not args.folder:
+        print("Error: Folder path is required.")
+        parser.print_help()
+        sys.exit(1)
+
+    folder_path = Path(args.folder)
+
+    # Generate output filename
+    output_name = f"{folder_path.name}_combined.pdf"
+    output_path = Path(folder_path) / output_name
+
+    # Process the folder
+    process_folder(args.folder, output_path)
