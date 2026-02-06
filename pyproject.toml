@@ -1,0 +1,10 @@
+[project]
+name = "pdf-ai-prep"
+version = "0.1.0"
+description = "pdf preprocessing for ai"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "pypdf>=6.6.2",
+    "reportlab>=4.4.9",
+]
