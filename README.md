@@ -35,3 +35,11 @@ Bookmarks are automatically generated showing:
 Example: 
 - `document1 (pages 1-5)`
 - `document2 (pages 6-8)`
+
+### Batch File
+
+For Windows users, you can use the provided batch file for convenient conversion:
+
+1. Copy [`pdf_combiner_runner.bat`](pdf_combiner_runner.bat) to the folder containing files you want to convert
+2. Update the `PROJECT_PATH` variable in the batch file to point to your PDF-Ai-Prep installation
+3. Run it
